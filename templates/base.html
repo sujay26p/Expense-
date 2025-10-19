@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Expense Splitter</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+    <nav class="nav">
+        <div class="nav-left">
+            <a class="brand" href="/">Expense Splitter</a>
+            <span class="muted">— split bills, no drama</span>
+        </div>
+        <div class="nav-right">
+            {% if current_user %}
+            <div class="user-pill">
+                <span class="avatar">{{ current_user.name[0]|upper }}</span>
+                <span class="user-name">{{ current_user.name }}</span>
+                <a class="link-logout" href="/logout">Logout</a>
+            </div>
+            {% else %}
+            <a class="btn" href="/login">Login with Google</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="card">
+            <div class="card-head">
+                <h2>Create a Group</h2>
+                <p class="muted">Create a room or trip group to start tracking expenses.</p>
+            </div>
+            {% if current_user %}
+            <form class="form-inline" action="/groups/create" method="post">
+                <input name="name" placeholder="Group name (e.g., Roommates)" required />
+                <button class="btn primary" type="submit">Create</button>
+            </form>
+            {% else %}
+            <p>Login to create groups.</p>
+            {% endif %}
+        </section>
+
+        <section class="card">
+            <h3>Existing groups</h3>
+            {% if current_user %}
+            <ul class="group-list">
+                {% for g in groups %}
+                <li><a href="/group/{{g.id}}">{{g.name}}</a></li>
+                {% else %}
+                <li class="muted">No groups yet — create one above.</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>Please <a href="/login">log in</a> to see and manage groups.</p>
+            {% endif %}
+        </section>
+
+        <footer class="footer">
+            <small>Tip: Invite members by email so they join automatically after Google sign-in.</small>
+        </footer>
+    </main>
+</body>
+
+</html>

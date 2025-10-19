@@ -1,0 +1,236 @@
+/* layout reset */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    margin: 0;
+    color: #0b1220;
+    background: #f5f7fb;
+}
+
+a {
+    color: #1666f4;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* nav */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: white;
+    border-bottom: 1px solid #e6e9ef;
+}
+
+.brand {
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: #0b1220;
+    margin-right: 12px;
+}
+
+.muted {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 0 16px;
+    display: block;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 18px;
+    align-items: start;
+}
+
+/* cards */
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 1px 4px rgba(12, 20, 40, 0.04);
+    margin-bottom: 16px;
+}
+
+.card-head h2 {
+    margin: 0 0 4px 0;
+}
+
+.card h3 {
+    margin: 0 0 8px 0;
+}
+
+/* forms */
+.form-inline {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.form-inline input {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid #d7dbe6;
+    border-radius: 8px;
+}
+
+.form-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-stack input,
+select {
+    padding: 8px 10px;
+    border: 1px solid #d7dbe6;
+    border-radius: 8px;
+}
+
+/* sidebar */
+.sidebar .members {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0 0;
+}
+
+.sidebar .members li {
+    padding: 6px 0;
+    border-bottom: 1px dashed #eef2f7;
+}
+
+/* balances */
+.balances {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.balances li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.bval.pos {
+    color: #047857;
+    font-weight: 600;
+}
+
+.bval.neg {
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+/* participants */
+.participants {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.participant-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* table */
+.expenses-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 0.95rem;
+}
+
+.expenses-table th,
+.expenses-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #eef2f7;
+    text-align: left;
+}
+
+.num {
+    text-align: right;
+}
+
+/* buttons */
+.btn {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #d7dbe6;
+    background: transparent;
+    cursor: pointer;
+}
+
+.btn.primary {
+    background: #1666f4;
+    color: white;
+    border-color: transparent;
+}
+
+.btn.small {
+    padding: 6px 8px;
+    font-size: 0.9rem;
+}
+
+/* user pill */
+.user-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #e6eefc;
+    color: #1648d5;
+    font-weight: 700;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-right: 8px;
+}
+
+/* settlement */
+.settle-list {
+    margin: 0;
+    padding-left: 18px;
+}
+
+/* responsive */
+@media (max-width:900px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        order: 2;
+    }
+
+    .content {
+        order: 1;
+    }
+}

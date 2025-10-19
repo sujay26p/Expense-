@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Group: {{group.name}}</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+    <nav class="nav">
+        <div class="nav-left">
+            <a class="brand" href="/">Expense Splitter</a>
+        </div>
+        <div class="nav-right">
+            {% if current_user %}
+            <div class="user-pill">
+                <span class="avatar">{{ current_user.name[0]|upper }}</span>
+                <span class="user-name">{{ current_user.name }}</span>
+                <a class="link-logout" href="/logout">Logout</a>
+            </div>
+            {% else %}
+            <a class="btn" href="/login">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="container grid">
+        <aside class="sidebar card">
+            <h3>{{group.name}}</h3>
+            <div class="section">
+                <h4>Members</h4>
+                <ul class="members">
+                    {% for m in members %}
+                    <li>{{m.name}}</li>
+                    {% endfor %}
+                </ul>
+
+                {% if current_user %}
+                <form action="/group/{{group.id}}/members/add" method="post" class="form-stack">
+                    <input name="name" placeholder="Member name (optional)" />
+                    <input name="email" placeholder="Member email (optional)" />
+                    <button class="btn" type="submit">Add / Invite</button>
+                </form>
+                {% else %}
+                <p class="muted">Login to add members.</p>
+                {% endif %}
+            </div>
+
+            <div class="section small">
+                <h4>Balances</h4>
+                <ul class="balances">
+                    {% for b in balances %}
+                    <li>
+                        <span class="bname">{{b.name}}</span>
+                        <span class="bval {% if b.net < 0 %}neg{% else %}pos{% endif %}">
+                            {% if b.net >= 0 %} +${{'%.2f' % b.net}} {% else %} -${{'%.2f' % (-b.net)}} {% endif %}
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </aside>
+
+        <section class="content">
+            <div class="card">
+                <h3>Add Expense</h3>
+                {% if not members %}<p class="muted">Add members before adding expenses.</p>{% endif %}
+                {% if current_user %}
+                <form id="add-expense-form" action="/group/{{group.id}}/expense/add" method="post" class="form-stack">
+                    <label>Payer:
+                        <select name="payer_id">
+                            {% for m in members %}
+                            <option value="{{m.id}}">{{m.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <div class="row">
+                        <label>Amount: <input name="amount" type="number" step="0.01" required /></label>
+                        <label>Description: <input name="description" /></label>
+                    </div>
+
+                    <div class="muted small">Participants (checked = share)</div>
+                    <div id="participants-area" class="participants">
+                        {% for m in members %}
+                        <div class="participant-row">
+                            <label><input type="checkbox" name="participants" value="{{m.id}}" checked />
+                                {{m.name}}</label>
+                            <input class="share-input" name="shares" placeholder="share (optional)" />
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="row">
+                        <label><input type="checkbox" id="use-custom-shares" /> Use custom shares</label>
+                        <button class="btn primary" type="submit">Add Expense</button>
+                    </div>
+                </form>
+                {% else %}
+                <p class="muted">Login to add expenses.</p>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h3>Expenses</h3>
+                <table class="expenses-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Payer</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Participants</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for e in expenses %}
+                        <tr>
+                            <td>{{e.date}}</td>
+                            <td>{{e.payer_name}}</td>
+                            <td>{{e.desc}}</td>
+                            <td class="num">${{e.amount}}</td>
+                            <td>
+                                {% for p in e.participants %}{{p.name}}{{' (' + (p.share|string) + ')' if p.share }}{%
+                                if not loop.last %}, {% endif %}{% endfor %}
+                            </td>
+                            <td>
+                                {% if current_user %}
+                                <form style="display:inline" action="/group/{{group.id}}/expense/{{e.id}}/delete"
+                                    method="post">
+                                    <button class="btn small" type="submit">Delete</button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="muted">No expenses yet</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>Settlement suggestion</h3>
+                <ol class="settle-list">
+                    {% for s in settlements %}
+                    <li>{{s.from_name}} → {{s.to_name}} : ${{'%.2f' % s.amount}}</li>
+                    {% else %}
+                    <li class="muted">No settlements required.</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const toggle = document.getElementById('use-custom-shares');
+        const shareInputs = document.querySelectorAll('.share-input');
+        if (toggle) {
+            toggle.addEventListener('change', () => {
+                if (toggle.checked) {
+                    shareInputs.forEach(i => { i.style.display = 'inline-block'; i.placeholder = 'share (e.g. 2)'; });
+                } else {
+                    shareInputs.forEach(i => { i.style.display = 'inline-block'; i.value = ''; i.placeholder = 'share (optional)'; });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

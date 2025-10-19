@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+sqlmodel
+jinja2
+aiofiles
+pytest
+httpx
+python-multipart
+authlib
+python-dotenv
+itsdangerous
